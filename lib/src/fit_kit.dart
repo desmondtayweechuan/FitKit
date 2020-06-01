@@ -27,17 +27,32 @@ class FitKit {
   }
 
   /// #### It's not advised to call `await FitKit.read(dataType)` without any extra parameters. This can lead to FAILED BINDER TRANSACTION on Android devices because of the data batch size being too large.
-  static Future<List<FitData>> read(
-    DataType type, {
-    DateTime dateFrom,
-    DateTime dateTo,
-    int limit,
-  }) async {
+  static Future<List<FitData>> read(DataType type,
+      {DateTime dateFrom, DateTime dateTo, int limit}) async {
     return await _channel.invokeListMethod('read', {
       "type": _dataTypeToString(type),
       "date_from": dateFrom?.millisecondsSinceEpoch ?? 1,
       "date_to": (dateTo ?? DateTime.now()).millisecondsSinceEpoch,
+      "limit": limit
+    }).then(
+      (response) => response.map((item) => FitData.fromJson(item)).toList(),
+    );
+  }
+
+  /// #### It's not advised to call `await FitKit.read(dataType)` without any extra parameters. This can lead to FAILED BINDER TRANSACTION on Android devices because of the data batch size being too large.
+  static Future<List<FitData>> readByInterval(
+    DataType type, {
+    DateTime dateFrom,
+    DateTime dateTo,
+    int limit,
+    int interval,
+  }) async {
+    return await _channel.invokeListMethod('readByInterval', {
+      "type": _dataTypeToString(type),
+      "date_from": dateFrom?.millisecondsSinceEpoch ?? 1,
+      "date_to": (dateTo ?? DateTime.now()).millisecondsSinceEpoch,
       "limit": limit,
+      "interval": interval,
     }).then(
       (response) => response.map((item) => FitData.fromJson(item)).toList(),
     );

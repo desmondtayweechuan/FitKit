@@ -179,9 +179,10 @@ class FitKitPlugin(private val registrar: Registrar) : MethodCallHandler {
         val readRequest = DataReadRequest.Builder()
                 .read(request.type.dataType)
                 .also { builder ->
-                    when (request.limit != null) {
+                    when (request.limit != null && request.interval != null) {
                         true -> builder.setLimit(request.limit)
-                        else -> builder.bucketByTime(1, TimeUnit.DAYS)
+                        else -> builder.bucketByTime(5, TimeUnit.MINUTES)
+                        // else -> builder.bucketByTime(1, TimeUnit.DAYS)
                     }
                 }
                 .setTimeRange(request.dateFrom.time, request.dateTo.time, TimeUnit.MILLISECONDS)
