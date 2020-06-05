@@ -181,7 +181,7 @@ class FitKitPlugin(private val registrar: Registrar) : MethodCallHandler {
                 .also { builder ->
                     when (request.limit != null) {
                         true -> builder.setLimit(request.limit)
-                        else -> builder.bucketByTime(request.interval, TimeUnit.MINUTES)
+                        else -> builder.bucketByTime(1, TimeUnit.DAY)
                     }
                 }
                 .setTimeRange(request.dateFrom.time, request.dateTo.time, TimeUnit.MILLISECONDS)
